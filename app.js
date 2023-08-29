@@ -1,10 +1,8 @@
 import http from "node:http";
 import { users } from "./users.js";
-import { posts } from "./posts.js";
+import { fs } from 'node:fs/promises';
 
-/* console.log(posts); */
-
-const app = http.createServer((request, response) => {
+const app = http.createServer(async (request, response) => {
   if (request.url === "/" && request.method === "GET") {
     response.statusCode = 200;
     response.setHeader("Content-Type", "text/plain");
@@ -16,7 +14,8 @@ const app = http.createServer((request, response) => {
   } else if (request.url === "/posts" && request.method === "GET") {
     response.statusCode = 200;
     response.setHeader("Content-Type", "application/json");
-    response.end(JSON.stringify(posts));
+    const json = await fs.readFile("/posts.json");
+    response.end(json);
   }
 });
 
